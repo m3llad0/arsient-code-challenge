@@ -38,7 +38,6 @@ export default function Nft() {
     }, [handleNFT]);
 
 
-    console.log(data);
 
     return(
         <main>
