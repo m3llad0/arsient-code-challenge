@@ -32,7 +32,7 @@ export default function App() {
 
   useEffect(() => {
     handleProducts();
-  }, [handleProducts]);;
+  }, [handleProducts]);
 
   return (
     <main className="bg-white">
