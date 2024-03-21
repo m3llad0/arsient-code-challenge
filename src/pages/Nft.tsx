@@ -4,22 +4,22 @@ import axios from 'axios';
 import Show from "../components/Show";
 import { API } from '../config';
 import Navbar from '../components/Navbar';
-
-
+import BuyModal from '../components/BuyModal';
 
 interface NFT {
     id: number, 
     name: string,
     imageSrc: string, 
     imageAlt: string, 
-    price: number 
+    price: number, 
+    description: string
 }
-
 
 export default function Nft() {
     const { id } = useParams();  
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState<NFT | null>(null);
+    const [openModal, setOpenModal] = useState(false);
 
     const handleNFT = useCallback(async () => {
         setLoading(true);
@@ -52,24 +52,53 @@ export default function Nft() {
                 </Show.When>
                 <Show.When isTrue={!loading}>
                     <Navbar />
+                    <nav aria-label="Breadcrumb">
+                        <ol className="mx-auto flex max-w-2xl items-center space-x-2 px-4 py-5 sm:px-6 lg:max-w-7xl lg:px-8">
+                            <li>
+                                <div className="flex items-center space-x-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" 
+                                    fill="none" viewBox="0 0 24 24" 
+                                    stroke-width="1.5" 
+                                    stroke="currentColor" 
+                                    className="w-6 h-6">
+                                    <path stroke-linecap="round" 
+                                    stroke-linejoin="round" 
+                                    d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                                    </svg>
+                                    <a href="/" className="mr-2 text-sm font-medium text-gray-900">
+                                        Regresar
+                                    </a>
+
+                                </div>
+                            </li>
+                        </ol>
+                    </nav>
                     <div className='bg-white'>
-                        <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+                        <div className="mx-auto max-w-2xl px-4 sm:px-6 sm:py-4  lg:max-w-7xl lg:px-8">
                             <h2 className="sr-only">Product</h2>
-                            <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 outline">
-                                <div className=''>
-                                    <h2 className="text-sm font-medium text-gray-500">NFT</h2>
-                                    <p className="mt-1 text-2xl font-semibold text-gray-900">{data?.name}</p>
-                                    <p className="mt-1 text-2xl font-semibold text-gray-900">{data?.price}</p>
-                                    <button>Comprar</button>
+                            <div className="grid grid-cols-1 gap-x-40 gap-y-10 sm:grid-cols-2">
+                                <div className="flex flex-col space-y-10">
+                                    <h1 className="text-3xl font-bold text-gray-950">{data?.name}</h1>
+                                    <div className='flex flex-col'>
+                                        <p className='text-sm font-normal text-gray-700'>Precio actual</p>
+                                        <p className="text-2xl font-semibold text-gray-900">
+                                        ETH {new Intl.NumberFormat().format(data?.price ?? 0)} | 
+                                         {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'MXN' }).format(data?.price ? data.price * 59160.19 : 0)}
+                                        </p>                                    </div>
+                                    <p>{data?.description}</p>
+                                    <button className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                    onClick={() => setOpenModal(!openModal)}
+                                    >Comprar</button>
                                 </div>
                                 <div className="group">
-                                    <figure className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
-                                        <img src={data?.imageSrc} alt={data?.imageAlt} className="h-full w-full object-cover object-center group-hover:opacity-75"/>
+                                    <figure className="aspect-h-1 overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
+                                        <img src={data?.imageSrc} alt={data?.imageAlt} className=" h-5/6  object-cover object-center"/>
                                     </figure>
                                 </div>
                             </div>
                         </div>
-                    </div>                  
+                    </div>
+                    <BuyModal open={openModal} setOpen={setOpenModal} />
                 </Show.When>
             </Show>
         </main>
