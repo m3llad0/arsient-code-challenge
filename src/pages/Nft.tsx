@@ -4,8 +4,7 @@ import axios from 'axios';
 import Show from "../components/Show";
 import { API } from '../config';
 import Navbar from '../components/Navbar';
-
-
+import BuyModal from '../components/BuyModal';
 
 interface NFT {
     id: number, 
@@ -20,6 +19,7 @@ export default function Nft() {
     const { id } = useParams();  
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState<NFT | null>(null);
+    const [openModal, setOpenModal] = useState(false);
 
     const handleNFT = useCallback(async () => {
         setLoading(true);
@@ -87,6 +87,7 @@ export default function Nft() {
                                         </p>                                    </div>
                                     <p>{data?.description}</p>
                                     <button className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                    onClick={() => setOpenModal(!openModal)}
                                     >Comprar</button>
                                 </div>
                                 <div className="group">
@@ -96,7 +97,8 @@ export default function Nft() {
                                 </div>
                             </div>
                         </div>
-                    </div>                  
+                    </div>
+                    <BuyModal open={openModal} setOpen={setOpenModal} />
                 </Show.When>
             </Show>
         </main>
